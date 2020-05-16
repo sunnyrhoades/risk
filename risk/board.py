@@ -155,15 +155,16 @@ class Board(object):
         Returns:
             bool: True if the path is an attack path
         '''
-        if len(path) < 2:
-            return False
-        elif self.is_valid_path(path) is False:
-            return False
+        if self.is_valid_path(path):
+            if len(path) < 2:
+                return False
+            else: 
+                for i in range(len(path) - 1):
+                    if self.owner(path[i]) == self.owner(path[0]):
+                        return False
+                return True
         else:
-            for territory in path:
-                if path[0] != territory and self.owner(territory) == self.owner(path[0]):
-                    return False
-            return True
+            return False
 
     def cost_of_attack_path(self, path):
         '''
@@ -199,29 +200,24 @@ class Board(object):
         Returns:
             [int]: a valid path between source and target that has minimum length; this path is guaranteed to exist
         '''
-        
-        names = risk.definitions.territory_names
-        keys = list(names.keys())
-
-        stack = []
-        stack.append(source)
+        d = {}
+        d[source] = [source]
+        visited = set()
+        visited.add(source)
         q = deque()
-        q.appendleft(stack)
-
-        if source == target:
-            return stack
+        q.append(source)
 
         while q:
-            s = q.pop()
-            for territory in keys:
-                if territory in self.neighbors(s[-1]):
-                    if territory == target:
-                        s.append(target)
-                        return s
-                    s_copy = copy.deepcopy(s)
-                    s_copy.append(territory)
-                    q.appendleft(s_copy)
-                    keys.remove(territory)
+            this_territory = q.popleft()
+            if this_territory == target:
+                return d[this_territory]
+            for territory in risk.definitions.territory_neighbors[this_territory]:
+                if territory not in visited:
+                    d_copy = copy.deepcopy(d[this_territory])
+                    d_copy.append(territory)
+                    d[territory] = d_copy
+                    q.append(territory)
+                visited.add(territory)
 
     def can_fortify(self, source, target):
         '''
