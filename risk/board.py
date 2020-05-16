@@ -125,6 +125,8 @@ class Board(object):
         '''
         if len(path) == 0 or len(path) == 1:
             return True
+        elif len(path) != len(set(path)):
+            return False
         else:
             for i in range(len(path) - 1):
                 if path[i+1] not in risk.definitions.territory_neighbors[path[i]]:
