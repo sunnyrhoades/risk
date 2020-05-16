@@ -1,6 +1,8 @@
 import os
 import random
 from collections import namedtuple
+from copy import deepcopy
+from collections import deque 
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -212,7 +214,6 @@ class Board(object):
                     q.appendleft(s_copy)
                     keys.remove(territory)
 
-
     def can_fortify(self, source, target):
         '''
         At the end of a turn, a player may choose to fortify a target territory by moving armies from a source territory.
@@ -226,7 +227,28 @@ class Board(object):
         Returns:
             bool: True if reinforcing the target from the source territory is a valid move
         '''
+        names = risk.definitions.territory_names
+        keys = list(names.keys())
 
+        stack = []
+        stack.append(source)
+        q = deque()
+        q.appendleft(stack)
+
+        if source == target:
+            return stack
+
+        while q:
+            s = q.pop()
+            for territory in keys:
+                if territory in self.neighbors(s[-1]) and self.owner(territory) == self.owner(s[-1]):
+                    if territory == target:
+                        return True
+                    s_copy = copy.deepcopy(s)
+                    s_copy.append(territory)
+                    q.appendleft(s_copy)
+                    keys.remove(territory)
+        return False
 
     def cheapest_attack_path(self, source, target):
         '''
