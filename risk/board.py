@@ -1,7 +1,7 @@
 import os
 import random
 from collections import namedtuple
-from copy import copy, deepcopy
+import copy
 from collections import deque 
 
 import heapdict
@@ -200,23 +200,23 @@ class Board(object):
         Returns:
             [int]: a valid path between source and target that has minimum length; this path is guaranteed to exist
         '''
-        d = {}
-        d[source] = [source]
+        dictionary = {}
+        dictionary[source] = [source]
         visited = set()
         visited.add(source)
-        q = deque()
-        q.append(source)
+        queue = deque()
+        queue.append(source)
 
-        while q:
-            this_territory = q.popleft()
+        while queue:
+            this_territory = queue.popleft()
             if this_territory == target:
-                return d[this_territory]
+                return dictionary[this_territory]
             for territory in risk.definitions.territory_neighbors[this_territory]:
                 if territory not in visited:
-                    d_copy = copy.deepcopy(d[this_territory])
+                    d_copy = copy.deepcopy(dictionary[this_territory])
                     d_copy.append(territory)
-                    d[territory] = d_copy
-                    q.append(territory)
+                    dictionary[territory] = d_copy
+                    queue.append(territory)
                 visited.add(territory)
 
     def can_fortify(self, source, target):
