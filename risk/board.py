@@ -123,15 +123,20 @@ class Board(object):
         Returns:
             bool: True if the input path is valid
         '''
-        if len(path) == 0 or len(path) == 1:
+        if len(path) == 0:
             return True
+        if len(path) == 1:
+            return True
+        if len(path) != len(set(path)):
+            return False
         else:
-            for i in range(1, len(path)):
-                if path[i+1] not in risk.definitions.territory_neighbors[path[i]]:
+            for i in range(len(path) - 1):
+                territory = path[i]
+                neighbor = risk.definitions.territory_neighbors[territory]
+                next_path = path[i+1]
+                if next_path not in neighbor:
                     return False
-                elif path[i] not in path[i+1:]:
-                    return False
-            return True
+            return False
 
     def is_valid_attack_path(self, path):
         '''
