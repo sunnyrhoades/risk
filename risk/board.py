@@ -4,6 +4,7 @@ from collections import namedtuple
 from copy import deepcopy
 from collections import deque 
 
+import heapdict
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.path import Path
@@ -296,6 +297,29 @@ class Board(object):
         Returns:
             bool: True if a valid attack path exists between source and target; else False
         '''
+        d = {}
+        d[source] = [source]
+        q = deque()
+        q.append(source)
+        visited = []
+        visited.append(source)
+
+        if source == target:
+            return False
+
+        while q:
+            current_territory = q.popleft()
+            attack = [i for i in risk.definitions.territory_neighbors[current_territory] if self.owner(source) != self.owner(i)]
+            if current_territory == target:
+                return True
+            for territory in attack:
+                if territory not in visited:
+                    d_copy = copy.deepcopy(d[current_territory])
+                    d_copy.append(territory)
+                    d[territory] = d_copy
+                    q.append(territory)
+                visited.append(territory)
+        return False
 
 
     # ======================= #
