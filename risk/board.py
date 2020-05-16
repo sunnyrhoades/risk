@@ -232,25 +232,25 @@ class Board(object):
         Returns:
             bool: True if reinforcing the target from the source territory is a valid move
         '''
-        stack = []
-        stack.append(source)
-        queue = deque()
-        queue.appendleft(stack)
+        dictionary = {}
+        dictionary[source] = [source]
+        q = deque()
+        q.append(source)
+        visited = set()
+        visited.add(source)
 
-        if source == target:
-            return stack
-        
-        while queue:
-            s = queue.pop()
-            for territory in list(risk.definitions.territory_names.key()):
-                if territory in self.neighbors(s[-1]) and self.owner(territory) == self.owner(s[-1]):
-                    if territory == target:
-                        return True
-                    s_copy = copy.deepcopy(stack)
-                    s_copy.append(territory)
-                    queue.appendleft(s_copy)
-                    list(risk.definitions.territory_names.keys()).remove(territory)
-        return False
+        while q:
+            this_territory = q.popleft()
+            fortify_neighbors = [i for i in risk.definitions.territory_neighbors[current_territory][i]]
+            if target == this_territory:
+                return True
+            for territory in fortify_neighbors:
+                if territory not in visited:
+                    d_copy = copy.deepcopy(dictionary[this_territory])
+                    d_copy.append(territory)
+                    dictionary[territory] = d_copy
+                    q.append(territory)
+                visited.add(territory)
 
     def cheapest_attack_path(self, source, target):
         '''
