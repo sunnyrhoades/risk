@@ -279,7 +279,10 @@ class Board(object):
                     d_copy = copy.deepcopy(d[stack])
                     d_copy.append(territory)
                     priority_path = self.armies(territory) + priority
-                    elif territory not in q:
+                    if territory not in q:
+                        d[territory] = d_copy
+                        q[territory] = self.armies(territory) + priority
+                    elif priority_path <= q[territory]:
                         d[territory] = d_copy
                         q[territory] = priority_path
                 visited.append(territory)
