@@ -150,15 +150,16 @@ class Board(object):
         Returns:
             bool: True if the path is an attack path
         '''
-        if len(path) < 2:
+        if self.is_valid_path(path):
+            if len(path) < 2:
+                return False
+            else:
+                for i in range(1, len(path)):
+                    if self.owner(path[i]) == self.owner(path[0]):
+                        return False
+                return True
+        else:
             return False
-        elif self.is_valid_path(path) is False:
-            return False
-        else: 
-            for i in range(len(path) - 1):
-                if path[0] != path[i] and self.owner(path[i]) == self.owner(path[0]):
-                    return False
-            return True
 
     def cost_of_attack_path(self, path):
         '''
@@ -171,12 +172,11 @@ class Board(object):
         Returns:
             bool: the number of enemy armies in the path
         '''
-        army = 0
-        for i in range(len(path) - 1):
-            if path[i] == path[0]:
-                continue
-            army = army + self.armies(path[i])
-        return army
+        armies = 0
+        is self.is_valid_attack_path(path):
+            for i in range(1, len(path)):
+                armies += self.armies(path[i]))
+            return armies
 
     def shortest_path(self, source, target):
         '''
