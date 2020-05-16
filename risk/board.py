@@ -173,7 +173,7 @@ class Board(object):
             bool: the number of enemy armies in the path
         '''
         armies = 0
-        is self.is_valid_attack_path(path):
+        if self.is_valid_attack_path(path):
             for i in range(1, len(path)):
                 armies += self.armies(path[i]))
             return armies
