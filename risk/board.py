@@ -175,7 +175,7 @@ class Board(object):
         armies = 0
         if self.is_valid_attack_path(path):
             for i in range(1, len(path)):
-                armies += self.armies(path[i]))
+                armies += self.armies(path[i])
             return armies
 
     def shortest_path(self, source, target):
