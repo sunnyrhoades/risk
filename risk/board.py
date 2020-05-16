@@ -1,7 +1,7 @@
 import os
 import random
 from collections import namedtuple
-from copy import deepcopy
+from copy import copy, deepcopy
 from collections import deque 
 
 import heapdict
