@@ -154,9 +154,9 @@ class Board(object):
 	    for i in range(1, len(path)):
 	        if self.owner(path[i]) == self.owner(path[0]):
 		    return False
-		return True
+	        return True
         else:
-	    return False
+            return False
 
     def cost_of_attack_path(self, path):
         '''
