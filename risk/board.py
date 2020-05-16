@@ -8,6 +8,15 @@ from matplotlib.path import Path
 
 import risk.definitions
 
+#class Territory:
+#    def __init__(territory_id, player_id, armies):
+#        self.territory_id = territory_id
+#        self.player_id = player_id
+#        self.armies = armies
+
+#territory = Territory(0, 1, 2)
+#territory.territory_id # = 0
+
 Territory = namedtuple('Territory', ['territory_id', 'player_id', 'armies'])
 Move = namedtuple('Attack', ['from_territory_id', 'from_armies', 'to_territory_id', 'to_player_id', 'to_armies'])
 
@@ -111,8 +120,17 @@ class Board(object):
         Returns:
             bool: True if the input path is valid
         '''
+        if len(path) == 1 or len(path) == 0:
+            return True
+        else:
+            for i in range(len(path) - 1):
+                territory = path[i]
+                if path[i+1] not in risk.definitions.territory_neighbors[territory]:
+                    return False
+                elif territory in path[i+1]:
+                    return False
+            return True
 
-    
     def is_valid_attack_path(self, path):
         '''
         The rules of Risk state that when attacking, 
