@@ -154,10 +154,10 @@ class Board(object):
             if len(path) < 2:
                 return False
             else:
-                for i in range(1, len(path)):
-                    if self.owner(path[i]) == self.owner(path[0]):
+                for x in range(1, len(path)):
+                    if self.owner(path[x]) == self.owner(path[0]):
                         return False
-                return False
+                return True
         else:
             return False
 
