@@ -177,12 +177,12 @@ class Board(object):
         Returns:
             bool: the number of enemy armies in the path
         '''
-        cost = 0
+        army = 0
         for territory in path:
             if territory == path[0]:
                 continue
-            cost = cost + self.armies(territory)
-        return cost 
+            army = army + self.armies(territory)
+        return army
 
     def shortest_path(self, source, target):
         '''
@@ -238,6 +238,9 @@ class Board(object):
         q.append(source)
         visited = set()
         visited.add(source)
+        
+        if source == target:
+            return dictionary
 
         while q:
             this_territory = q.popleft()
