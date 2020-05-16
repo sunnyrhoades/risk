@@ -266,26 +266,22 @@ class Board(object):
         d = {}
         d[source] = [source]
         q = heapdict.heapdict()
-        q[source] = 0
         visited = []
         visited.append(source)
 
         while q:
-	    priority, stack= q.popitem()
-	    for territory in self.neighbors(s):
-	        if territory not in visited and self.owner(territory) != self.owner(source):
-		    if territory == target:
-		        d[stack].append(territory)
-			return d[stack]
-		    d_copy = copy.deepcopy(d[stack])
-		    d_copy.append(territory)
-		    priority_path = self.armies(territory) + priority
-		    if territory not in q:
-		        d[territory] = d_copy
-			q[territory] = self.armies(territory) + priority
-		    elif priority_path <= q[territory]:
+            priority, stack = q.popitem()
+            for territory in self.neighbors(stack):
+                if territory not in visited and self.owner(territory) != self.owner(source):
+                    if territory == target:
+                        d[stack].append(territory)
+                        return d[stack]
+	            d_copy = copy.deepcopy(d[stack])
+                    d_copy.append(territory)
+                    priority_path = self.armies(territory) + priority
+                    elif territory not in q:
                         d[territory] = d_copy
-			q[territory] = priority_path
+                        q[territory] = priority_path
                 visited.append(territory)
 
     def can_attack(self, source, target):
