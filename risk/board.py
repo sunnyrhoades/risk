@@ -265,29 +265,34 @@ class Board(object):
         Returns:
             [int]: a list of territory_ids representing the valid attack path; if no path exists, then it returns None instead
         '''
-        d = {}
-        d[source] = [source]
-        q = heapdict.heapdict()
-        visited = []
-        visited.append(source)
+        dictionary = {}
+        dictionary[source] = [source]
+        priority_q = heapdict.heapdict()
+        priority_q[source] = 0
+        visited = set()
+        visited.add(source)
 
-        while q:
-            priority, stack = q.popitem()
-            for territory in self.neighbors(stack):
-                if territory not in visited and self.owner(territory) != self.owner(source):
-                    if territory == target:
-                        d[stack].append(territory)
-                        return d[stack]
-                    d_copy = copy.deepcopy(d[stack])
+        if not self.can_attack(source, target):
+            return None
+
+        while priority_q:
+            this_territory, priority = priority_q.popitem()
+            attacks = [i for i in risk.definitions.territory_neighbors[this_territory] if self.owner(source) != self.owner(i)]
+            if this_territory == target:
+                return dictionary[this_territory]
+            for territory in attacks:
+                if territory not in visited:
+                    d_copy = copy.deepcopy(dictionary[this_territory])
                     d_copy.append(territory)
-                    priority_path = self.armies(territory) + priority
-                    if territory not in q:
-                        d[territory] = d_copy
-                        q[territory] = self.armies(territory) + priority
-                    elif priority_path <= q[territory]:
-                        d[territory] = d_copy
-                        q[territory] = priority_path
-                visited.append(territory)
+                    path_priority = priority + self.armies(territory)
+                    if territory not in priority_q:
+                        dictionary[territory] = d_copy
+                        priority_q[territory] = priority + self.armies(territory)
+                    else:
+                        if path_priority < priority:
+                            dictionary[territory] = d_copy
+                            priority_q[territory] = path_priority
+                visited.add(territory)
 
     def can_attack(self, source, target):
         '''
