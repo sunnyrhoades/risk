@@ -129,7 +129,7 @@ class Board(object):
             for i in range(1, len(path)):
                 if path[i+1] not in risk.definitions.territory_neighbors[path[i]]:
                     return False
-                elif path[i] not in path[i+1]:
+                elif path[i] not in path[i+1:]:
                     return False
             return True
 
@@ -194,6 +194,10 @@ class Board(object):
         Returns:
             [int]: a valid path between source and target that has minimum length; this path is guaranteed to exist
         '''
+        
+        names = risk.definitions.territory_names
+        keys = list(names.keys())
+
         stack = []
         stack.append(source)
         q = deque()
