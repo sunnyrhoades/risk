@@ -176,11 +176,12 @@ class Board(object):
         Returns:
             bool: the number of enemy armies in the path
         '''
-        armies = 0
-        if self.is_valid_attack_path(path):
-            for i in range(1, len(path)):
-                armies += self.armies(path[i])
-            return armies
+        cost = 0
+        for territory in path:
+            if territory == path[0]:
+                continue
+            cost = cost + self.armies(territory)
+        return cost 
 
     def shortest_path(self, source, target):
         '''
