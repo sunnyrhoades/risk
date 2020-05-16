@@ -241,7 +241,7 @@ class Board(object):
 
         while q:
             this_territory = q.popleft()
-            fortify_neighbors = [i for i in risk.definitions.territory_neighbors[this_territory][i]]
+            fortify_neighbors = risk.definitions.territory_neighbors[this_territory]
             if target == this_territory:
                 return True
             for territory in fortify_neighbors:
