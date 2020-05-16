@@ -148,7 +148,16 @@ class Board(object):
         Returns:
             bool: True if the path is an attack path
         '''
-
+        if self.is_valid_path(path):
+            if len(path) < 2:
+                return False
+            else:
+                for x in range(1, len(path)):
+                    if self.owner(path[x]) == self.owner(path[0]):
+                        return False
+                return True
+        else:
+            return False
 
     def cost_of_attack_path(self, path):
         '''
@@ -161,7 +170,11 @@ class Board(object):
         Returns:
             bool: the number of enemy armies in the path
         '''
-
+        army = 0
+        if self.is_valid_attack_path(path):
+            for x in range(1, len(path)):
+                army += self.armies(path[i])
+            return army
 
     def shortest_path(self, source, target):
         '''
@@ -179,6 +192,25 @@ class Board(object):
         Returns:
             [int]: a valid path between source and target that has minimum length; this path is guaranteed to exist
         '''
+        stack = []
+        stack.append(source)
+        q = deque()
+        q.appendleft(stack)
+
+        if source == target:
+            return stack
+
+        while q:
+            s = q.pop()
+            for territory in keys:
+                if territory in self.neighbors(s[-1]):
+                    if territory == target:
+                        s.append(target)
+                        return s
+                    s_copy = copy.deepcopy(s)
+                    s_copy.append(territory)
+                    q.appendleft(s_copy)
+                    keys.remove(territory)
 
 
     def can_fortify(self, source, target):
